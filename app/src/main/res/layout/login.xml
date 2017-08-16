@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="3">
+
+    <TableRow>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:text="@string/login_name"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/login_account"
+            android:layout_height="wrap_content"
+            android:layout_span="3"
+            android:textSize="18sp" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:text="@string/login_password"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/login_password"
+            android:layout_height="wrap_content"
+            android:layout_span="3"
+            android:textSize="18sp" />
+    </TableRow>
+
+    <TableRow>
+
+        <CheckBox
+            android:id="@+id/save_password"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_span="4"
+            android:checked="false"
+            android:text="记住密码"
+            android:textSize="16sp" />
+    </TableRow>
+
+    <TableRow>
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_span="4"
+            android:text="@string/login_button"
+            android:textSize="18sp" />
+    </TableRow>
+
+    <TableRow android:gravity="center_horizontal">
+
+        <!--<Button
+            android:id="@+id/forget_button"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:text="@string/forget_password"
+            android:textSize="14sp" />-->
+        <Button
+            android:id="@+id/pass_button"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:text="@string/pass"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:text="@string/register_account"
+            android:textSize="14sp" />
+
+    </TableRow>
+
+</TableLayout>

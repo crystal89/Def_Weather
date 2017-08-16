@@ -1,0 +1,18 @@
+<resources>
+    <!--登录-->
+    <string name="app_name">CrystalWorld</string>
+    <string name="login_name">账 号:</string>
+    <string name="login_password">密 码:</string>
+    <string name="login_button">登 录</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="pass">跳过</string>
+    <string name="register_account">注册账号</string>
+    <!--天气状态-->
+    <string name="weather_forecast">天气预报</string>
+    <string name="weather_aqi">空气质量</string>
+    <string name="weather_aqi_index">AQI指数</string>
+    <string name="weather_aqi_pm2.5">PM2.5指数</string>
+    <string name="weather_aqi_qlty">综合</string>
+
+    <string name="weather_suggestion">生活建议</string>
+</resources>
