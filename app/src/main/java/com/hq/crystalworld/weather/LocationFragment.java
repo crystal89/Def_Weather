@@ -64,7 +64,7 @@ public class LocationFragment extends Fragment {
         map = new HashMap<String, Object>();
 
         //获取文件中所有关注的城市信息
-        HashMap<String, String> hashMap = loadFromFile();
+        final HashMap<String, String> hashMap = loadFromFile();
         if (!hashMap.isEmpty()) {
             //更新对应的温度
             addLocationItems(hashMap);
@@ -76,8 +76,23 @@ public class LocationFragment extends Fragment {
         list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //getFragmentManager().popBackStack();
-                Toast.makeText(getContext(), "back to show weather", Toast.LENGTH_SHORT).show();
+                //getFragmentManager().popBackStackImmediate();
+                Toast.makeText(getContext(), "返回到" + parent.getItemAtPosition(position).toString() + "天气展示界面！", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //listview中删除按钮的点击事件
+        listAdapter.setmOnItemDeleteListener(new LocationListViewAdapter.onItemDeleteListener() {
+            @Override
+            public void onItemDeleteClick(int i) {
+                //删除concernedCity中hashmap的信息
+                String city_name = hashMapList.get(i).get("city_name").toString();
+                if (ConcernedCity.hashMap_city.containsKey(city_name)) {
+                    ConcernedCity.hashMap_city.remove(city_name);
+                }
+                hashMapList.remove(i);
+                listAdapter.notifyDataSetChanged();
+                LogUtil.i(TAG, "remove item");
             }
         });
         return view;
@@ -104,8 +119,6 @@ public class LocationFragment extends Fragment {
         LogUtil.i(TAG, "pause");
 
         //保存关注的城市
-        if (ConcernedCity.hashMap_city.isEmpty())
-            return;
         saveToFile(ConcernedCity.hashMap_city);
     }
 
@@ -125,6 +138,7 @@ public class LocationFragment extends Fragment {
             map.put("city_name", ConcernedCity.add_city_name);
             map.put("city_temp", ConcernedCity.add_city_temp);
             hashMapList.add(map);
+            LogUtil.i(TAG, map.toString());
             //刷新listview
             listAdapter.notifyDataSetChanged();
         }
