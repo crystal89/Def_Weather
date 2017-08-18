@@ -9,6 +9,6 @@ import java.util.HashMap;
 public class ConcernedCity {
     public static HashMap<String, String> hashMap_city = new HashMap<String, String>();
 
-    public static String add_city_name = new String();
-    public static String add_city_temp = new String();
+    public static String add_city_name = null;
+    public static String add_city_temp = null;
 }

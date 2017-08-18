@@ -7,10 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hq.crystalworld.R;
 import com.hq.crystalworld.util.LogUtil;
@@ -21,9 +23,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -37,7 +41,10 @@ public class LocationFragment extends Fragment {
     private LinearLayout location_items_layout;
     private ImageButton add_city_button;
 
-    private ListView location_list_view;
+    private ListView list_view;
+    private List<HashMap<String, Object>> hashMapList;
+    private HashMap<String, Object> map;
+    private LocationListViewAdapter listAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,13 +53,15 @@ public class LocationFragment extends Fragment {
         add_city_button = (ImageButton) view.findViewById(R.id.add_city_button);
         location_items_layout = (LinearLayout) view.findViewById(R.id.location_items_layout);
 
-        //location_list_view = (ListView) view.findViewById(R.id.location_list_view);
-
-        /*
+      /*
         //do test
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("浦东新区/35\r\n静安区/32\r\n");
         saveToFile(stringBuilder);*/
+
+        list_view = (ListView) view.findViewById(R.id.list_view);
+        hashMapList = new ArrayList<HashMap<String, Object>>();
+        map = new HashMap<String, Object>();
 
         //获取文件中所有关注的城市信息
         HashMap<String, String> hashMap = loadFromFile();
@@ -62,6 +71,15 @@ public class LocationFragment extends Fragment {
             ConcernedCity.hashMap_city.putAll(hashMap);
         }
 
+        listAdapter = new LocationListViewAdapter(getContext(), hashMapList);
+        list_view.setAdapter(listAdapter);
+        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //getFragmentManager().popBackStack();
+                Toast.makeText(getContext(), "back to show weather", Toast.LENGTH_SHORT).show();
+            }
+        });
         return view;
     }
 
@@ -97,13 +115,18 @@ public class LocationFragment extends Fragment {
         LogUtil.i(TAG, "resume");
 
         //新增关注的城市
-        if (ConcernedCity.add_city_name.isEmpty())
+        if (ConcernedCity.add_city_name == null)
             return;
 
         if (!ConcernedCity.hashMap_city.containsKey(ConcernedCity.add_city_name)) {
             ConcernedCity.hashMap_city.put(ConcernedCity.add_city_name, ConcernedCity.add_city_temp);
             //添加item
-            initLocationItemContext(ConcernedCity.add_city_name, ConcernedCity.add_city_temp);
+            //initLocationItemContext(ConcernedCity.add_city_name, ConcernedCity.add_city_temp);
+            map.put("city_name", ConcernedCity.add_city_name);
+            map.put("city_temp", ConcernedCity.add_city_temp);
+            hashMapList.add(map);
+            //刷新listview
+            listAdapter.notifyDataSetChanged();
         }
 
         //清空新增关注的城市
@@ -119,26 +142,35 @@ public class LocationFragment extends Fragment {
         Iterator<String> valuse_it = values.iterator();
 
         while (keys_it.hasNext()) {
-            initLocationItemContext(keys_it.next(), valuse_it.next());
+            String city_name = keys_it.next();
+            String city_temp = valuse_it.next();
+            //initLocationItemContext(city_name, city_temp);
+
+            map.put("city_name", city_name);
+            map.put("city_temp", city_temp);
+            hashMapList.add(map);
         }
     }
 
     private void initLocationItemContext(String add_name, String add_temp) {
-        View itemView = LayoutInflater.from(getContext()).inflate(R.layout.location_item, location_items_layout, false);
-
+        View itemView = LayoutInflater.from(getContext()).inflate(R.layout.location_list_item, location_items_layout, false);
         TextView city = (TextView) itemView.findViewById(R.id.location_city);
         TextView temp = (TextView) itemView.findViewById(R.id.location_temp);
         city.setText(add_name);
-        temp.setText(add_temp);
+        temp.setText(add_temp + "°");
 
         location_items_layout.addView(itemView);
     }
 
+    /**
+     * 将关注的城市信息保存到文件中
+     */
     private void saveToFile(HashMap<String, String> in_content) {
         LogUtil.i("save to file", in_content.toString());
         FileOutputStream out = null;
         BufferedWriter writer = null;
         try {
+            //全覆盖方式保存
             out = getContext().openFileOutput("data", Context.MODE_PRIVATE);
             writer = new BufferedWriter(new OutputStreamWriter(out));
 
@@ -167,6 +199,9 @@ public class LocationFragment extends Fragment {
         }
     }
 
+    /**
+     * 从文件中加载已经保存的关注的城市信息
+     */
     private HashMap<String, String> loadFromFile() {
         FileInputStream in = null;
         BufferedReader reader = null;

@@ -29,12 +29,12 @@
 
 
     <Button
-        android:id="@+id/delete_city_buttton"
+        android:id="@+id/delete_button"
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:background="#8000"
         android:text="移除"
-        android:textColor="#FFF"
-        android:textSize="12sp" />
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
 
 </LinearLayout>

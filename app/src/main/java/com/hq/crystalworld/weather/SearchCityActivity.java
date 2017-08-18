@@ -78,6 +78,7 @@ public class SearchCityActivity extends AppCompatActivity {
                             //通知LocationFragment新增一个item内容
                             ConcernedCity.add_city_name = weather.basic.cityName;
                             ConcernedCity.add_city_temp = weather.now.temperature;
+                            Toast.makeText(SearchCityActivity.this, "正在查找" + weather.basic.cityName + "的天气信息！", Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
                             Toast.makeText(SearchCityActivity.this, "无法查找到当前城市！", Toast.LENGTH_SHORT).show();
